@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A6204FB72E0D0E3700CF0D25 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A6204FB62E0D0E3700CF0D25 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A6F50FD12E0C317A004FD59F /* Kiosk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kiosk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6204FB72E0D0E3700CF0D25 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Kiosk;
 			packageProductDependencies = (
+				A6204FB62E0D0E3700CF0D25 /* SnapKit */,
 			);
 			productName = Kiosk;
 			productReference = A6F50FD12E0C317A004FD59F /* Kiosk.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = A6F50FC82E0C317A004FD59F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A6204FB52E0D0E3700CF0D25 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A6F50FD22E0C317A004FD59F /* Products */;
 			projectDirPath = "";
@@ -333,6 +342,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A6204FB52E0D0E3700CF0D25 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A6204FB62E0D0E3700CF0D25 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6204FB52E0D0E3700CF0D25 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A6F50FC92E0C317A004FD59F /* Project object */;
 }
