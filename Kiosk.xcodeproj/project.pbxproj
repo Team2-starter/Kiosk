@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A6204FB72E0D0E3700CF0D25 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A6204FB62E0D0E3700CF0D25 /* SnapKit */; };
+		A6204FB92E0D106A00CF0D25 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6204FB82E0D106A00CF0D25 /* MenuCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A6204FB82E0D106A00CF0D25 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		A6F50FD12E0C317A004FD59F /* Kiosk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kiosk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,6 +54,7 @@
 			children = (
 				A6F50FD32E0C317A004FD59F /* Kiosk */,
 				A6F50FD22E0C317A004FD59F /* Products */,
+				A6204FB82E0D106A00CF0D25 /* MenuCell.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6204FB92E0D106A00CF0D25 /* MenuCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
