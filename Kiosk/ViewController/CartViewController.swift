@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class CartViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: UI Components
 
