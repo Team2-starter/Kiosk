@@ -3,7 +3,7 @@
 import UIKit
 import SnapKit
 
-class KioskViewController: UIViewController, UIScrollViewDelegate {
+class MenuViewController: UIViewController, UIScrollViewDelegate {
 
     let menuData: [MenuItem] = [
         MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),

@@ -8,7 +8,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = KioskViewController() // 시작 뷰컨트롤러 지정
+        window?.rootViewController = MenuViewController() // 시작 뷰컨트롤러 지정
         window?.makeKeyAndVisible()
     }
     
