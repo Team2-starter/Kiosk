@@ -1,7 +1,4 @@
-import Foundation
-
-struct MMenuItem {
-    let name : String
-    let price : Double
-    let imageName : String
+struct OrderItem {
+    let name: String
+    var quantity: Int
 }
