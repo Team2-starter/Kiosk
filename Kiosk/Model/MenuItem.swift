@@ -1,6 +1,6 @@
 import Foundation
 
-struct MMenuItem {
+struct MenuItem {
     let name : String
     let price : Double
     let imageName : String
