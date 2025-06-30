@@ -4,18 +4,18 @@ import SnapKit
 class MenuView: UIView, UIScrollViewDelegate {
     var delegate: OrderTapDelegate?
     let menuData: [MenuItem] = [
-        MenuItem(name: "연어롤초밥1", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥2", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥3", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥4", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어초밥5", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥6", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥7", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥8", price: 1500, imageName: "salmon"),
-        MenuItem(name: "사이다", price: 2000, imageName: "salmon"),
-        MenuItem(name: "콜라", price: 2000, imageName: "salmon"),
-        MenuItem(name: "된장국", price: 1000, imageName: "salmon"),
-        MenuItem(name: "우동", price: 4000, imageName: "salmon")
+        MenuItem(name: "연어초밥", price: 3000, imageName: "salmon"),
+        MenuItem(name: "광어초밥", price: 3000, imageName: "gwang"),
+        MenuItem(name: "참치초밥", price: 5000, imageName: "cham"),
+        MenuItem(name: "장어초밥", price: 4000, imageName: "jang"),
+        MenuItem(name: "계란초밥", price: 1500, imageName: "egg"),
+        MenuItem(name: "문어초밥", price: 2000, imageName: "moon"),
+        MenuItem(name: "유부초밥", price: 1500, imageName: "you"),
+        MenuItem(name: "새우초밥", price: 3500, imageName: "sae"),
+        MenuItem(name: "사이다", price: 2000, imageName: "sai"),
+        MenuItem(name: "콜라", price: 2000, imageName: "coca"),
+        MenuItem(name: "미소된장", price: 1000, imageName: "miso"),
+        MenuItem(name: "미니우동", price: 1000, imageName: "udong")
     ]
 
     let scrollView = UIScrollView()
