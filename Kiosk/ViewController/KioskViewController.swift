@@ -22,6 +22,7 @@ class KioskViewController: UIViewController, UITableViewDataSource, UITableViewD
     let tableLabel = UILabel()
     let solidLineView1 = UIView()
     let solidLineView2 = UIView()
+    let categoryUnderline = UIView()
     let finalPriceTitleLabel = UILabel()
     let totalPriceLabel = UILabel()
     let cancelButton = UIButton(type: .system)
@@ -52,6 +53,9 @@ class KioskViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     private func setupUI() {
         view.backgroundColor = .white
+        
+        categoryUnderline.backgroundColor = UIColor(red: 0.9, green: 0.93, blue: 0.96, alpha: 1.0)
+        view.addSubview(categoryUnderline)
         
         view.addSubview(titleView)
         view.addSubview(menuView)
@@ -105,8 +109,14 @@ class KioskViewController: UIViewController, UITableViewDataSource, UITableViewD
             $0.height.equalTo(80)
         }
         
+        categoryUnderline.snp.makeConstraints {
+            $0.top.equalTo(titleView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        
         menuView.snp.makeConstraints {
-            $0.top.equalTo(titleView.snp.bottom).offset(-20)
+            $0.top.equalTo(categoryUnderline.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(390)
         }
