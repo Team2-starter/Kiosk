@@ -1,7 +1,7 @@
 import Foundation
 
 struct MenuItem {
-    let name : String
-    let price : Double
-    let imageName : String
+    let name: String
+    let price: Int
+    let imageName: String
 }

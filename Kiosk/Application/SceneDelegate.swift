@@ -8,10 +8,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-
-        window?.rootViewController = TitleSectionView() // 시작 뷰컨트롤러 지정
-        window?.rootViewController = CartViewController() // 시작 뷰컨트롤러 지정
-
+        window?.rootViewController = KioskViewController() // 시작 뷰컨트롤러 지정
         window?.makeKeyAndVisible()
     }
     
