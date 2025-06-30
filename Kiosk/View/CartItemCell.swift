@@ -2,68 +2,85 @@ import UIKit
 import SnapKit
 
 class CartItemCell: UITableViewCell {
-    let itemImageView = UIImageView()
-    let nameLabel = UILabel()
-    let priceLabel = UILabel()
-    let quantityLabel = UILabel()
-    let minusButton = UIButton(type: .system)
-    let plusButton = UIButton(type: .system)
 
     var onQuantityChange: ((Int) -> Void)?
 
+    private let containerView = UIView()
+    private let iconImageView = UIImageView()    // 이미지뷰 추가
+    private let nameLabel = UILabel()
+    private let quantityLabel = UILabel()
+    private let minusButton = UIButton(type: .system)
+    private let plusButton = UIButton(type: .system)
+
+    private var quantity: Int = 1
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
+        setupUI()
         setupConstraints()
+
+        backgroundColor = .clear
+        selectionStyle = .none
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupViews() {
-        itemImageView.contentMode = .scaleAspectFit
-        itemImageView.image = UIImage(systemName: "photo")
+    private func setupUI() {
+        containerView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        containerView.layer.cornerRadius = 12
+        containerView.layer.masksToBounds = true
 
-        nameLabel.font = .boldSystemFont(ofSize: 16)
-        priceLabel.font = .systemFont(ofSize: 14)
-        priceLabel.textColor = .gray
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.tintColor = .gray
+
+        nameLabel.font = .systemFont(ofSize: 16)
 
         quantityLabel.font = .systemFont(ofSize: 16)
         quantityLabel.textAlignment = .center
 
-        minusButton.setTitle("−", for: .normal)
+        // ——— 여기가 핵심: 버튼을 주황색 동그라미로 스타일링 ———
+        minusButton.setTitle("-", for: .normal)
+        minusButton.setTitleColor(.white, for: .normal)
+        minusButton.backgroundColor = UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 1.0) // 주황색
+        minusButton.layer.cornerRadius = 15
+        minusButton.clipsToBounds = true
+
         plusButton.setTitle("+", for: .normal)
+        plusButton.setTitleColor(.white, for: .normal)
+        plusButton.backgroundColor = UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 1.0) // 주황색
+        plusButton.layer.cornerRadius = 15
+        plusButton.clipsToBounds = true
 
-        minusButton.addTarget(self, action: #selector(minusTapped), for: .touchUpInside)
-        plusButton.addTarget(self, action: #selector(plusTapped), for: .touchUpInside)
+        minusButton.addTarget(self, action: #selector(decreaseQuantity), for: .touchUpInside)
+        plusButton.addTarget(self, action: #selector(increaseQuantity), for: .touchUpInside)
 
-        [itemImageView, nameLabel, priceLabel, minusButton, quantityLabel, plusButton].forEach {
-            contentView.addSubview($0)
+        contentView.addSubview(containerView)
+        [iconImageView, nameLabel, minusButton, quantityLabel, plusButton].forEach {
+            containerView.addSubview($0)
         }
     }
 
     private func setupConstraints() {
-        itemImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(10)
+        containerView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(8)
+            $0.height.equalTo(60)
+        }
+
+        iconImageView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
             $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(40)
+            $0.width.height.equalTo(30) // 이미지 크기
         }
 
         nameLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.leading.equalTo(itemImageView.snp.trailing).offset(10)
-            $0.trailing.lessThanOrEqualTo(minusButton.snp.leading).offset(-10)
-        }
-
-        priceLabel.snp.makeConstraints {
-            $0.top.equalTo(nameLabel.snp.bottom).offset(4)
-            $0.leading.equalTo(nameLabel)
-            $0.bottom.equalToSuperview().offset(-10)
+            $0.leading.equalTo(iconImageView.snp.trailing).offset(12)
+            $0.centerY.equalToSuperview()
         }
 
         plusButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-10)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(30)
         }
@@ -83,21 +100,23 @@ class CartItemCell: UITableViewCell {
 
     func configure(with item: OrderItem) {
         nameLabel.text = item.name
-        priceLabel.text = "\(item.quantity * 10000)원"
-        quantityLabel.text = "\(item.quantity)"
+        quantity = item.quantity
+        quantityLabel.text = "\(quantity)"
+
+        // 예시 이미지 넣기 (없으면 기본 이미지나 nil 가능)
+        iconImageView.image = UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysTemplate)
     }
 
-    @objc private func minusTapped() {
-        guard let qty = Int(quantityLabel.text ?? ""), qty > 1 else { return }
-        let newQty = qty - 1
-        quantityLabel.text = "\(newQty)"
-        onQuantityChange?(newQty)
+    @objc private func decreaseQuantity() {
+        guard quantity > 1 else { return }
+        quantity -= 1
+        quantityLabel.text = "\(quantity)"
+        onQuantityChange?(quantity)
     }
 
-    @objc private func plusTapped() {
-        guard let qty = Int(quantityLabel.text ?? ""), qty < 10 else { return }
-        let newQty = qty + 1
-        quantityLabel.text = "\(newQty)"
-        onQuantityChange?(newQty)
+    @objc private func increaseQuantity() {
+        quantity += 1
+        quantityLabel.text = "\(quantity)"
+        onQuantityChange?(quantity)
     }
 }
