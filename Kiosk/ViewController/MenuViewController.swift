@@ -1,17 +1,17 @@
 import UIKit
 import SnapKit
 
-class MenuViewController: UIViewController, UIScrollViewDelegate {
-
+class MenuView: UIView, UIScrollViewDelegate {
+    var delegate: OrderTapDelegate?
     let menuData: [MenuItem] = [
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
+        MenuItem(name: "연어롤초밥1", price: 3500, imageName: "salmon"),
+        MenuItem(name: "연어롤초밥2", price: 3500, imageName: "salmon"),
+        MenuItem(name: "연어롤초밥3", price: 3500, imageName: "salmon"),
+        MenuItem(name: "연어롤초밥4", price: 3500, imageName: "salmon"),
+        MenuItem(name: "연어초밥5", price: 1500, imageName: "salmon"),
+        MenuItem(name: "연어초밥6", price: 1500, imageName: "salmon"),
+        MenuItem(name: "연어초밥7", price: 1500, imageName: "salmon"),
+        MenuItem(name: "연어초밥8", price: 1500, imageName: "salmon"),
         MenuItem(name: "사이다", price: 2000, imageName: "salmon"),
         MenuItem(name: "콜라", price: 2000, imageName: "salmon"),
         MenuItem(name: "된장국", price: 1000, imageName: "salmon"),
@@ -22,21 +22,25 @@ class MenuViewController: UIViewController, UIScrollViewDelegate {
     let pageControl = UIPageControl()
     let cardsPerPage = 4
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
         setupScrollView()
         setupPageControl()
         layoutCards()
     }
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupScrollView() {
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.delegate = self
-        view.addSubview(scrollView)
+        addSubview(scrollView)
         scrollView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(12)
+            $0.top.equalTo(safeAreaLayoutGuide).offset(12)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().inset(40)
         }
@@ -46,7 +50,9 @@ class MenuViewController: UIViewController, UIScrollViewDelegate {
         let totalPages = Int(ceil(Double(menuData.count) / Double(cardsPerPage)))
         pageControl.numberOfPages = totalPages
         pageControl.currentPage = 0
-        view.addSubview(pageControl)
+        pageControl.currentPageIndicatorTintColor = .red
+        pageControl.pageIndicatorTintColor = .gray
+        addSubview(pageControl)
         pageControl.snp.makeConstraints {
             $0.top.equalTo(scrollView.snp.bottom).offset(4)
             $0.centerX.equalToSuperview()
@@ -57,7 +63,7 @@ class MenuViewController: UIViewController, UIScrollViewDelegate {
     private func layoutCards() {
         let screenWidth = UIScreen.main.bounds.width
         let cardWidth = (screenWidth - 12 * 3 - 32) / 2
-        let cardHeight: CGFloat = 180
+        let cardHeight: CGFloat = 140
         let cardSize = CGSize(width: cardWidth, height: cardHeight)
 
         for (index, item) in menuData.enumerated() {
@@ -69,7 +75,7 @@ class MenuViewController: UIViewController, UIScrollViewDelegate {
             let cardView = MenuCell()
             cardView.configure(with: item)
             cardView.onPlusTapped = {
-                print("🍣 \(item.name) 추가됨")
+                self.delegate?.tapMenu(name: item.name)
             }
             scrollView.addSubview(cardView)
             cardView.snp.makeConstraints {

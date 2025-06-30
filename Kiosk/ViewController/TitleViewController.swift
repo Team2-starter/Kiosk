@@ -1,14 +1,18 @@
 import UIKit
 import SnapKit
 
-class TitleViewController: UIViewController {
+class TitleView: UIView {
     
     var buttons: [UIButton] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
         setupStackView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setupStackView() {
@@ -16,11 +20,11 @@ class TitleViewController: UIViewController {
         
         let horizontalStackView = makeHorizontalStackView(buttons)
         
-        view.addSubview(horizontalStackView)
+        addSubview(horizontalStackView)
         
         horizontalStackView.snp.makeConstraints {make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(20)
+            make.centerX.equalTo(safeAreaLayoutGuide)
             make.width.equalTo(280)
             make.height.equalTo(50)
         }

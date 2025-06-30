@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "다운로드.png",
+      "filename" : "salmon 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "다운로드 1.png",
+      "filename" : "salmon 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "다운로드 2.png",
+      "filename" : "salmon.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

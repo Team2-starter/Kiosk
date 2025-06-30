@@ -3,10 +3,15 @@
 import UIKit
 import SnapKit
 
+protocol OrderTapDelegate: AnyObject {
+    func tapMenu(name: String)
+}
+
 class CartViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: UI Components
-
+    let titleView = TitleView()
+    let menuView = MenuView()
     let tableView = UITableView()
     let titleLabel = UILabel()
     let tableLabel = UILabel()
@@ -16,19 +21,13 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let totalPriceLabel = UILabel()
     let cancelButton = UIButton(type: .system)
     let payButton = UIButton(type: .system)
-    let addTestMenuButton = UIButton(type: .system)
     let bottomContainer = UIView()
 
     let deepOrange = UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 1.0)
 
     // MARK: Data
 
-    var orderItems: [OrderItem] = [
-        OrderItem(name: "초밥 세트", quantity: 2),
-        OrderItem(name: "라멘", quantity: 1),
-        OrderItem(name: "녹차 아이스크림", quantity: 3),
-        OrderItem(name: "우동", quantity: 1)
-    ]
+    var orderItems: [OrderItem] = []
 
     var hasOrder: Bool {
         orderItems.reduce(0) { $0 + $1.quantity } > 0
@@ -47,7 +46,10 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     private func setupUI() {
         view.backgroundColor = .white
-
+        
+        view.addSubview(titleView)
+        view.addSubview(menuView)
+        menuView.delegate = self
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
@@ -81,13 +83,7 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
         payButton.layer.borderColor = deepOrange.cgColor
         payButton.addTarget(self, action: #selector(payOrder), for: .touchUpInside)
 
-        addTestMenuButton.setTitle("메뉴 추가", for: .normal)
-        addTestMenuButton.backgroundColor = deepOrange
-        addTestMenuButton.setTitleColor(.white, for: .normal)
-        addTestMenuButton.layer.cornerRadius = 10
-        addTestMenuButton.addTarget(self, action: #selector(addTestMenu), for: .touchUpInside)
-
-        view.addSubview(addTestMenuButton)
+        
         view.addSubview(bottomContainer)
         [titleLabel, solidLineView1, tableView, solidLineView2, finalPriceTitleLabel, totalPriceLabel, cancelButton, payButton].forEach {
             bottomContainer.addSubview($0)
@@ -95,16 +91,23 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     private func setupConstraints() {
-        addTestMenuButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+        
+        titleView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(100)
-            $0.height.equalTo(40)
+            $0.width.equalTo(250)
+            $0.height.equalTo(80)
+        }
+        
+        menuView.snp.makeConstraints {
+            $0.top.equalTo(titleView.snp.bottom).offset(-20)
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(390)
         }
 
         bottomContainer.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(450) // ✅ 4개의 셀이 딱 들어가는 높이로 조정
+            $0.height.equalTo(350) // ✅ 4개의 셀이 딱 들어가는 높이로 조정
         }
 
         titleLabel.snp.makeConstraints {
@@ -122,7 +125,7 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.snp.makeConstraints {
             $0.top.equalTo(solidLineView1.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(220) // 셀 4개 높이
+            $0.height.equalTo(150) // 셀 4개 높이
         }
         solidLineView2.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
@@ -192,13 +195,6 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    @objc func addTestMenu() {
-        let newMenu = OrderItem(name: "테스트 메뉴 \(orderItems.count + 1)", quantity: 1)
-        orderItems.append(newMenu)
-        tableView.reloadData()
-        updateTotalPrice()
-    }
-
     // MARK: UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -215,5 +211,20 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.reloadRows(at: [indexPath], with: .none)
         }
         return cell
+    }
+}
+
+extension CartViewController: OrderTapDelegate {
+    func tapMenu(name: String) {
+        if let index = orderItems.firstIndex(where: { orderItem in
+            orderItem.name == name
+        }) {
+            orderItems[index].quantity += 1
+        } else {
+            let newMenu = OrderItem(name: name, quantity: 1)
+            orderItems.append(newMenu)
+        }
+        tableView.reloadData()
+        updateTotalPrice()
     }
 }

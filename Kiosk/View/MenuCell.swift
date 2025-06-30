@@ -78,7 +78,7 @@ class MenuCell: UICollectionViewCell {
         imageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
             $0.left.right.equalToSuperview().inset(12)
-            $0.height.equalTo(100)
+            $0.height.equalTo(80)
         }
 
         nameLabel.snp.makeConstraints {
@@ -93,7 +93,7 @@ class MenuCell: UICollectionViewCell {
         }
 
         plusButton.snp.makeConstraints {
-            $0.centerY.equalTo(priceLabel)
+            $0.centerY.equalTo(nameLabel).offset(8)
             $0.right.equalToSuperview().inset(12)
             $0.width.height.equalTo(28)
         }
