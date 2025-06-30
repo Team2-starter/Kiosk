@@ -1,5 +1,3 @@
-// CartViewController.swift (변경 없음)
-
 import UIKit
 import SnapKit
 
@@ -7,7 +5,14 @@ protocol OrderTapDelegate: AnyObject {
     func tapMenu(name: String)
 }
 
-class KioskViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+struct OrderItem {
+    let name: String
+    var quantity: Int
+    let imageName: String
+}
+
+class KioskViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MenuCategoryDelegate, OrderTapDelegate {
+    
     
     // MARK: UI Components
     let titleView = TitleView()
@@ -207,29 +212,49 @@ class KioskViewController: UIViewController, UITableViewDataSource, UITableViewD
         let item = orderItems[indexPath.row]
         cell.configure(with: item)
         cell.onQuantityChange = { [weak self] newQty in
-            self?.orderItems[indexPath.row].quantity = newQty
-            self?.updateTotalPrice()
-            tableView.reloadRows(at: [indexPath], with: .none)
+            guard let self = self else { return }
+            
+            if newQty == 0 {
+                self.orderItems.remove(at: indexPath.row)
+                tableView.reloadData()
+            } else {
+                self.orderItems[indexPath.row].quantity = newQty
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+            
+            self.updateTotalPrice()
         }
         return cell
     }
-}
-
-extension KioskViewController: OrderTapDelegate {
+    
     func tapMenu(name: String) {
-        if let index = orderItems.firstIndex(where: { orderItem in
-            orderItem.name == name
-        }) {
+        if let index = orderItems.firstIndex(where: { $0.name == name }) {
             orderItems[index].quantity += 1
         } else {
-            let newMenu = OrderItem(name: name, quantity: 1)
+            let imageName: String
+            switch name {
+            case "연어초밥": imageName = "salmon"
+            case "참치초밥": imageName = "cham"
+            case "장어초밥": imageName = "jang"
+            case "계란초밥": imageName = "egg"
+            case "광어초밥": imageName = "gwnag"
+            case "계란초밥": imageName = "egg"
+            case "문어초밥": imageName = "moon"
+            case "유부초밥": imageName = "you"
+            case "새우초밥": imageName = "sae"
+            case "사이다": imageName = "saida"
+            case "콜라": imageName = "coca"
+            case "미소된장": imageName = "miso"
+            case "미니우동": imageName = "udong"
+            default: imageName = "default_sushi"
+            }
+            let newMenu = OrderItem(name: name, quantity: 1, imageName: imageName)
             orderItems.append(newMenu)
         }
         tableView.reloadData()
         updateTotalPrice()
     }
-}
-extension KioskViewController: MenuCategoryDelegate {
+    
     func didSelectCategory(_ type: MenuType) {
         menuView.changeMenu(to: type)
     }

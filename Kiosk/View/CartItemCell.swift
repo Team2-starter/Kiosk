@@ -104,16 +104,18 @@ class CartItemCell: UITableViewCell {
         quantityLabel.text = "\(quantity)"
 
         // 예시 이미지 넣기 (없으면 기본 이미지나 nil 가능)
-        iconImageView.image = UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysTemplate)
+        iconImageView.image = UIImage(named: item.imageName)
     }
 
     @objc private func decreaseQuantity() {
-        guard quantity > 1 else { return }
-        quantity -= 1
-        quantityLabel.text = "\(quantity)"
-        onQuantityChange?(quantity)
+        if quantity > 1 {
+            quantity -= 1
+            quantityLabel.text = "\(quantity)"
+            onQuantityChange?(quantity)
+        } else {
+            onQuantityChange?(0)
+        }
     }
-
     @objc private func increaseQuantity() {
         quantity += 1
         quantityLabel.text = "\(quantity)"

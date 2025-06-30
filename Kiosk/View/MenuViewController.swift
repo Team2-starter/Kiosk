@@ -12,7 +12,7 @@ class MenuView: UIView, UIScrollViewDelegate {
         MenuItem(name: "문어초밥", price: 2000, imageName: "moon"),
         MenuItem(name: "유부초밥", price: 1500, imageName: "you"),
         MenuItem(name: "새우초밥", price: 3500, imageName: "sae"),
-        MenuItem(name: "사이다", price: 2000, imageName: "sai"),
+        MenuItem(name: "사이다", price: 2000, imageName: "saida"),
     ]
     let sushimemu: [MenuItem] = [
         MenuItem(name: "연어초밥", price: 3000, imageName: "salmon"),
@@ -26,7 +26,7 @@ class MenuView: UIView, UIScrollViewDelegate {
     ]
     
     let sidemenu: [MenuItem] = [
-        MenuItem(name: "사이다", price: 2000, imageName: "sai"),
+        MenuItem(name: "사이다", price: 2000, imageName: "saida"),
         MenuItem(name: "콜라", price: 2000, imageName: "coca"),
         MenuItem(name: "미소된장", price: 1000, imageName: "miso"),
         MenuItem(name: "미니우동", price: 1000, imageName: "udong")

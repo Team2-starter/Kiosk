@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "sae.jpeg",
+      "filename" : "sae.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "sae 1.jpeg",
+      "filename" : "sae 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "sae 2.jpeg",
+      "filename" : "sae 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

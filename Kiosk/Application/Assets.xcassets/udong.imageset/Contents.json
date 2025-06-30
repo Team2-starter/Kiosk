@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "udong.jpeg",
+      "filename" : "udong.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "udong 1.jpeg",
+      "filename" : "udong 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "udong 2.jpeg",
+      "filename" : "udong 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
