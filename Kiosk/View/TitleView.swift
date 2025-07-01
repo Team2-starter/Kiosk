@@ -32,7 +32,7 @@ class TitleView: UIView {
 
         var verticalStacks: [UIStackView] = []
 
-        for (index, button) in buttons.enumerated() {
+        for (_, button) in buttons.enumerated() {
             let underline = UIView()
             underline.backgroundColor = UIColor(red: 0.9, green: 0.93, blue: 0.96, alpha: 1.0) // 연회색
             underline.isHidden = false
@@ -58,7 +58,7 @@ class TitleView: UIView {
         }
 
         let horizontalStackView = UIStackView(arrangedSubviews: verticalStacks)
-        horizontalStackView.spacing = 20
+        horizontalStackView.spacing = 10
         horizontalStackView.distribution = .fillEqually
 
         addSubview(horizontalStackView)
@@ -67,7 +67,7 @@ class TitleView: UIView {
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(20)
             make.centerX.equalTo(safeAreaLayoutGuide)
             make.width.equalTo(280)
-            make.height.equalTo(70)
+            make.height.equalTo(50)
         }
 
         // 초기 상태에서 첫 번째 버튼 활성화
