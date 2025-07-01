@@ -1,93 +1,271 @@
-
-
 import UIKit
 import SnapKit
 
-class KioskViewController: UIViewController, UIScrollViewDelegate {
+protocol OrderTapDelegate: AnyObject {
+    func tapMenu(name: String)
+}
 
-    let menuData: [MenuItem] = [
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어롤초밥", price: 3500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "연어초밥", price: 1500, imageName: "salmon"),
-        MenuItem(name: "사이다", price: 2000, imageName: "salmon"),
-        MenuItem(name: "콜라", price: 2000, imageName: "salmon"),
-        MenuItem(name: "된장국", price: 1000, imageName: "salmon"),
-        MenuItem(name: "우동", price: 4000, imageName: "salmon")
-    ]
+struct OrderItem {
+    let name: String
+    var quantity: Int
+    let imageName: String
+}
 
-    let scrollView = UIScrollView()
-    let pageControl = UIPageControl()
-    let cardsPerPage = 4
-
+class KioskViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MenuCategoryDelegate, OrderTapDelegate {
+    
+    
+    // MARK: UI Components
+    let titleView = TitleView()
+    let menuView = MenuView()
+    let tableView = UITableView()
+    let titleLabel = UILabel()
+    let tableLabel = UILabel()
+    let solidLineView1 = UIView()
+    let solidLineView2 = UIView()
+    let categoryUnderline = UIView()
+    let finalPriceTitleLabel = UILabel()
+    let totalPriceLabel = UILabel()
+    let cancelButton = UIButton(type: .system)
+    let payButton = UIButton(type: .system)
+    let bottomContainer = UIView()
+    
+    let deepOrange = UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 1.0)
+    
+    // MARK: Data
+    
+    var orderItems: [OrderItem] = []
+    
+    var hasOrder: Bool {
+        orderItems.reduce(0) { $0 + $1.quantity } > 0
+    }
+    
+    // MARK: View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupConstraints()
+        updateTotalPrice()
+        titleView.delegate = self
+    }
+    
+    // MARK: Setup UI
+    
+    private func setupUI() {
         view.backgroundColor = .white
-        setupScrollView()
-        setupPageControl()
-        layoutCards()
-    }
-
-    private func setupScrollView() {
-        scrollView.isPagingEnabled = true
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.delegate = self
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(40)
+        
+        categoryUnderline.backgroundColor = UIColor(red: 0.9, green: 0.93, blue: 0.96, alpha: 1.0)
+        view.addSubview(categoryUnderline)
+        
+        view.addSubview(titleView)
+        view.addSubview(menuView)
+        menuView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(CartItemCell.self, forCellReuseIdentifier: "CartItemCell")
+        
+        titleLabel.text = "장바구니"
+        titleLabel.font = .boldSystemFont(ofSize: 20)
+        
+        solidLineView1.backgroundColor = .lightGray
+        solidLineView2.backgroundColor = .lightGray
+        
+        finalPriceTitleLabel.text = "결제 금액"
+        finalPriceTitleLabel.font = .boldSystemFont(ofSize: 18)
+        
+        totalPriceLabel.font = .boldSystemFont(ofSize: 18)
+        totalPriceLabel.textAlignment = .right
+        
+        cancelButton.setTitle("취소하기", for: .normal)
+        cancelButton.backgroundColor = .white
+        cancelButton.setTitleColor(deepOrange, for: .normal)
+        cancelButton.layer.cornerRadius = 10
+        cancelButton.layer.borderWidth = 2
+        cancelButton.layer.borderColor = deepOrange.cgColor
+        cancelButton.addTarget(self, action: #selector(cancelOrder), for: .touchUpInside)
+        
+        payButton.setTitle("결제하기", for: .normal)
+        payButton.backgroundColor = deepOrange
+        payButton.setTitleColor(.white, for: .normal)
+        payButton.layer.cornerRadius = 10
+        payButton.layer.borderWidth = 2
+        payButton.layer.borderColor = deepOrange.cgColor
+        payButton.addTarget(self, action: #selector(payOrder), for: .touchUpInside)
+        
+        
+        view.addSubview(bottomContainer)
+        [titleLabel, solidLineView1, tableView, solidLineView2, finalPriceTitleLabel, totalPriceLabel, cancelButton, payButton].forEach {
+            bottomContainer.addSubview($0)
         }
     }
-
-    private func setupPageControl() {
-        let totalPages = Int(ceil(Double(menuData.count) / Double(cardsPerPage)))
-        pageControl.numberOfPages = totalPages
-        pageControl.currentPage = 0
-        view.addSubview(pageControl)
-        pageControl.snp.makeConstraints {
-            $0.top.equalTo(scrollView.snp.bottom).offset(4)
+    
+    private func setupConstraints() {
+        
+        titleView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(20)
+            $0.width.equalTo(250)
+            $0.height.equalTo(80)
+        }
+        
+        categoryUnderline.snp.makeConstraints {
+            $0.top.equalTo(titleView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        
+        menuView.snp.makeConstraints {
+            $0.top.equalTo(categoryUnderline.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(390)
+        }
+        
+        bottomContainer.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(350)
+        }
+        
+        titleLabel.snp.makeConstraints {
+            $0.top.equalTo(bottomContainer).offset(16)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(40)
+        }
+        
+        solidLineView1.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(solidLineView1.snp.bottom).offset(8)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(150) // 셀 4개 높이
+        }
+        solidLineView2.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+            $0.bottom.equalTo(finalPriceTitleLabel.snp.top).offset(-8)
+        }
+        
+        finalPriceTitleLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.bottom.equalTo(cancelButton.snp.top).offset(-12)
+            $0.height.equalTo(40)
+            $0.width.equalTo(80)
+        }
+        
+        totalPriceLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.centerY.equalTo(finalPriceTitleLabel)
+            $0.height.equalTo(40)
+        }
+        
+        cancelButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(30)
+            $0.bottom.equalToSuperview().offset(-12)
+            $0.width.equalTo(140)
+            $0.height.equalTo(50)
+        }
+        
+        payButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-30)
+            $0.bottom.equalToSuperview().offset(-12)
+            $0.width.equalTo(140)
+            $0.height.equalTo(50)
         }
     }
-
-    private func layoutCards() {
-        let screenWidth = UIScreen.main.bounds.width
-        let cardWidth = (screenWidth - 12 * 3 - 32) / 2
-        let cardHeight: CGFloat = 180
-        let cardSize = CGSize(width: cardWidth, height: cardHeight)
-
-        for (index, item) in menuData.enumerated() {
-            let page = index / cardsPerPage
-            let positionInPage = index % cardsPerPage
-            let row = positionInPage / 2
-            let column = positionInPage % 2
-
-            let cardView = MenuCell()
-            cardView.configure(with: item)
-            cardView.onPlusTapped = {
-                print("🍣 \(item.name) 추가됨")
-            }
-            scrollView.addSubview(cardView)
-            cardView.snp.makeConstraints {
-                $0.width.equalTo(cardSize.width)
-                $0.height.equalTo(cardSize.height)
-                $0.leading.equalTo(scrollView.snp.leading).offset(CGFloat(page) * screenWidth + 16 + CGFloat(column) * (cardSize.width + 12))
-                $0.top.equalTo(scrollView.snp.top).offset(CGFloat(row) * (cardSize.height + 12) + 12)
-            }
-        }
-
-        let totalPages = Int(ceil(Double(menuData.count) / Double(cardsPerPage)))
-        scrollView.contentSize = CGSize(width: screenWidth * CGFloat(totalPages), height: 2 * (cardHeight + 12) + 12)
+    
+    // MARK: Logic
+    
+    func updateTotalPrice() {
+        let total = orderItems.reduce(0) { $0 + $1.quantity * 10000 }
+        totalPriceLabel.text = "\(total)원"
     }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let page = Int(round(scrollView.contentOffset.x / scrollView.bounds.width))
-        pageControl.currentPage = page
+    
+    @objc func cancelOrder() {
+        let alert = UIAlertController(title: "주문 취소", message: "정말 주문을 취소하시겠습니까?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "아니요", style: .cancel))
+        alert.addAction(UIAlertAction(title: "네", style: .destructive, handler: { _ in
+            self.orderItems.removeAll()
+            self.tableView.reloadData()
+            self.updateTotalPrice()
+        }))
+        present(alert, animated: true)
+    }
+    
+    @objc func payOrder() {
+        if !hasOrder {
+            let alert = UIAlertController(title: "알림", message: "주문할 메뉴가 없습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            present(alert, animated: true)
+        } else {
+            let alert = UIAlertController(title: "결제 완료", message: "주문이 정상적으로 결제되었습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+                self.orderItems.removeAll()
+                self.tableView.reloadData()
+                self.updateTotalPrice()
+            }))
+            present(alert, animated: true)
+        }
+    }
+    
+    // MARK: UITableViewDataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return orderItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CartItemCell", for: indexPath) as! CartItemCell
+        let item = orderItems[indexPath.row]
+        cell.configure(with: item)
+        cell.onQuantityChange = { [weak self] newQty in
+            guard let self = self else { return }
+            
+            if newQty == 0 {
+                self.orderItems.remove(at: indexPath.row)
+                tableView.reloadData()
+            } else {
+                self.orderItems[indexPath.row].quantity = newQty
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+            
+            self.updateTotalPrice()
+        }
+        return cell
+    }
+    
+    func tapMenu(name: String) {
+        if let index = orderItems.firstIndex(where: { $0.name == name }) {
+            orderItems[index].quantity += 1
+        } else {
+            let imageName: String
+            switch name {
+            case "연어초밥": imageName = "salmon"
+            case "참치초밥": imageName = "cham"
+            case "장어초밥": imageName = "jang"
+            case "계란초밥": imageName = "egg"
+            case "광어초밥": imageName = "gwnag"
+            case "계란초밥": imageName = "egg"
+            case "문어초밥": imageName = "moon"
+            case "유부초밥": imageName = "you"
+            case "새우초밥": imageName = "sae"
+            case "사이다": imageName = "saida"
+            case "콜라": imageName = "coca"
+            case "미소된장": imageName = "miso"
+            case "미니우동": imageName = "udong"
+            default: imageName = "default_sushi"
+            }
+            let newMenu = OrderItem(name: name, quantity: 1, imageName: imageName)
+            orderItems.append(newMenu)
+        }
+        tableView.reloadData()
+        updateTotalPrice()
+    }
+    
+    func didSelectCategory(_ type: MenuType) {
+        menuView.changeMenu(to: type)
     }
 }

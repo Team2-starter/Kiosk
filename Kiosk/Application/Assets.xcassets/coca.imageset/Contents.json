@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "salmon 2.png",
+      "filename" : "coca.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "salmon 1.png",
+      "filename" : "coca 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "salmon.png",
+      "filename" : "coca 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

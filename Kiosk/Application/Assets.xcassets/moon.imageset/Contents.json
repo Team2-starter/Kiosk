@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "salmon 2.png",
+      "filename" : "moon.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "salmon 1.png",
+      "filename" : "moon 1.jpeg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "salmon.png",
+      "filename" : "moon 2.jpeg",
       "idiom" : "universal",
       "scale" : "3x"
     }

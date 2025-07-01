@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "salmon 2.png",
+      "filename" : "jang.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "salmon 1.png",
+      "filename" : "jang 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "salmon.png",
+      "filename" : "jang 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
